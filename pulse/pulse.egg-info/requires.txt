@@ -1,0 +1,4 @@
+google-play-scraper==1.2.4
+python-dateutil==2.8.2
+emoji==2.12.1
+langdetect==1.0.9

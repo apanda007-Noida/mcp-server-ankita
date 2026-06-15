@@ -1,0 +1,9 @@
+# Automated Weekly App Review Pulse Requirements
+
+# Phase 2 Dependencies
+google-play-scraper==1.2.4
+python-dateutil==2.8.2
+emoji==2.12.1
+langdetect==1.0.9
+
+# Libraries like umap-learn, hdbscan, google-api-python-client will be added in later phases.

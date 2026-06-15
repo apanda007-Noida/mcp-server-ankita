@@ -1,0 +1,30 @@
+name: Weekly App Review Pulse
+
+on:
+  schedule:
+    # Run every Monday at 04:00 UTC (approx 09:30 IST)
+    - cron: '0 4 * * 1'
+  workflow_dispatch:
+    # Allow manual triggering from the GitHub UI
+
+jobs:
+  run-pulse:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: Run Pulse
+        run: |
+          # Stub for running the CLI. You can make the week dynamic using bash variables.
+          pulse run --product Groww --week current

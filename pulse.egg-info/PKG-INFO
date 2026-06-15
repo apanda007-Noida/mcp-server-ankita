@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: pulse
+Version: 0.1.0
+Summary: Automated Weekly App Review Pulse
+Requires-Dist: google-play-scraper==1.2.4
+Requires-Dist: python-dateutil==2.8.2
+Requires-Dist: emoji==2.12.1
+Requires-Dist: langdetect==1.0.9
+Dynamic: requires-dist
+Dynamic: summary
