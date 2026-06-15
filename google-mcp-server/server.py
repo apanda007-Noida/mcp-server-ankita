@@ -22,6 +22,14 @@ class EmailRequest(BaseModel):
     subject: str
     body: str
 
+@app.get("/")
+def read_root():
+    return {"status": "online", "message": "Google Workspace MCP Server is running."}
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
+
 def require_approval(action_name: str, payload: dict) -> bool:
     """
     Blocks the current thread to ask for terminal approval.
