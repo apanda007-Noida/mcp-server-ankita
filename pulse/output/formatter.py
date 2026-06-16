@@ -50,22 +50,24 @@ def generate_docs_report(insights: List[Dict], product: str, week: str) -> str:
 
 def generate_email_teaser(insights: List[Dict], product: str, week: str, doc_link: str = "[INSERT DOC LINK HERE]") -> str:
     """
-    Format a lightweight teaser for the Gmail output.
+    Format a lightweight HTML teaser for the Gmail output.
     """
     lines = []
-    lines.append(f"Subject: {product} App Review Pulse \u2014 {week}\n")
-    lines.append(f"Hi Team,")
-    lines.append(f"\nThe automated App Review Pulse for {product} is ready for {week}.")
-    lines.append(f"\nHere are the top themes customers are talking about this week:\n")
+    lines.append(f"<h2>{product} App Review Pulse — {week}</h2>")
+    lines.append(f"<p>Hi Team,</p>")
+    lines.append(f"<p>The automated App Review Pulse for {product} is ready for {week}.</p>")
+    lines.append(f"<p>Here are the top themes customers are talking about this week:</p>")
+    lines.append(f"<ul>")
     
     valid_insights = [i for i in insights if i.get("theme") and not i.get("theme").startswith("Error")]
     valid_insights.sort(key=lambda x: x.get("review_count", 0), reverse=True)
     
     # Show top 3 themes
     for i in valid_insights[:3]:
-        lines.append(f"\u2022 {i.get('theme').upper()}:\n  {i.get('description')}\n")
+        lines.append(f"<li><strong>{i.get('theme').upper()}:</strong><br/>{i.get('description')}</li>")
         
-    lines.append(f"\nRead the full report, verbatim quotes, and action ideas in the canonical Google Doc here:")
-    lines.append(doc_link)
+    lines.append("</ul>")
+    lines.append(f"<br/><p>Read the full report, verbatim quotes, and action ideas in the canonical Google Doc here:</p>")
+    lines.append(f"<p><a href='{doc_link}' style='display:inline-block;padding:10px 16px;background-color:#10b981;color:white;text-decoration:none;border-radius:4px;font-weight:bold;'>Open Full Report</a></p>")
     
     return "\n".join(lines)

@@ -10,30 +10,30 @@ def append_to_doc(doc_id: str, content: str) -> dict:
     creds = get_credentials()
     service = build('docs', 'v1', credentials=creds)
 
-    # Insert text at the end of the document
-    requests = [
-        {
-            'insertText': {
-                'location': {
-                    'index': 1, # Appending to end is tricky without reading length. Actually, let's insert at index 1 or read document first.
-                },
-                'text': content + "\n\n"
-            }
-        }
-    ]
+    doc = service.documents().get(documentId=doc_id).execute()
+    doc_content = doc.get('body').get('content')
     
-    # Better logic: read document to find the end index, then append.
-    # But for a simple append, we can use the endOfSegmentLocation
-    requests = [
-        {
-            'insertText': {
-                'endOfSegmentLocation': {
-                    'segmentId': '' # empty string means body
-                },
-                'text': content + "\n\n"
+    end_index = doc_content[-1].get('endIndex', 1) if doc_content else 1
+    
+    requests = []
+    if end_index > 2:
+        requests.append({
+            'deleteContentRange': {
+                'range': {
+                    'startIndex': 1,
+                    'endIndex': end_index - 1
+                }
             }
+        })
+        
+    requests.append({
+        'insertText': {
+            'location': {
+                'index': 1
+            },
+            'text': content + "\n\n"
         }
-    ]
+    })
 
     result = service.documents().batchUpdate(
         documentId=doc_id, body={'requests': requests}).execute()

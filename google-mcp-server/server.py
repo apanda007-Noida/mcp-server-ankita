@@ -27,6 +27,13 @@ class EmailRequest(BaseModel):
     subject: str
     body: str
 
+class TriggerRequest(BaseModel):
+    product: str
+    week: str
+
+import threading
+from pulse.orchestrator import run_pulse
+
 @app.get("/api/insights")
 def get_insights():
     try:
@@ -36,6 +43,50 @@ def get_insights():
                 with open(p, "r", encoding="utf-8") as f:
                     return json.load(f)
         return []
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/trigger")
+def trigger_pipeline(req: TriggerRequest):
+    t = threading.Thread(target=run_pulse, args=(req.product, req.week))
+    t.start()
+    return {"status": "started", "message": f"Pipeline triggered for {req.product} {req.week}"}
+
+@app.get("/api/config")
+def get_config():
+    return {
+        "google_doc_id": os.environ.get("GOOGLE_DOC_ID", "") 
+    }
+
+@app.get("/api/stats")
+def get_stats():
+    try:
+        paths = ["../data/normalized_reviews.json", "data/normalized_reviews.json"]
+        reviews = []
+        for p in paths:
+            if os.path.exists(p):
+                with open(p, "r", encoding="utf-8") as f:
+                    reviews = json.load(f)
+                break
+                
+        if not reviews:
+            return {"sentiment": [], "average": 0, "total": 0}
+            
+        positive = sum(1 for r in reviews if r.get("score", 0) >= 4)
+        neutral = sum(1 for r in reviews if r.get("score", 0) == 3)
+        negative = sum(1 for r in reviews if r.get("score", 0) <= 2)
+        
+        avg = sum(r.get("score", 0) for r in reviews) / len(reviews) if len(reviews) > 0 else 0
+        
+        return {
+            "sentiment": [
+                {"name": "Positive (4-5★)", "value": positive, "fill": "#4ade80"},
+                {"name": "Neutral (3★)", "value": neutral, "fill": "#fb923c"},
+                {"name": "Negative (1-2★)", "value": negative, "fill": "#f87171"}
+            ],
+            "average": round(avg, 1),
+            "total": len(reviews)
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

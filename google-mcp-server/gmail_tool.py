@@ -12,9 +12,10 @@ def create_email_draft(to: str, subject: str, body: str) -> dict:
     service = build('gmail', 'v1', credentials=creds)
 
     message = EmailMessage()
-    message.set_content(body)
     message['To'] = to
     message['Subject'] = subject
+    message.set_content("Please enable HTML to view this message.")
+    message.add_alternative(body, subtype='html')
 
     # Encoded message
     encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
