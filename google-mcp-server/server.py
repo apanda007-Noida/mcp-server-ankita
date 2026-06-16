@@ -94,7 +94,8 @@ def api_create_email_draft(req: EmailRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 if os.path.exists("static"):
-    app.mount("/assets", StaticFiles(directory="static/assets"), name="assets")
+    if os.path.exists("static/assets"):
+        app.mount("/assets", StaticFiles(directory="static/assets"), name="assets")
 
     @app.get("/")
     def serve_root():
