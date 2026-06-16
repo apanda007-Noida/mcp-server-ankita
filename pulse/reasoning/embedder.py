@@ -1,5 +1,4 @@
-# pyrefly: ignore [missing-import]
-from sentence_transformers import SentenceTransformer
+# ML imports deferred to avoid startup OOM
 from typing import List, Dict
 # pyrefly: ignore [missing-import]
 import numpy as np
@@ -11,6 +10,8 @@ _model = None
 def get_model():
     global _model
     if _model is None:
+        # Defer import to prevent PyTorch from eating RAM on server boot
+        from sentence_transformers import SentenceTransformer
         # Load the model only when needed to save memory
         _model = SentenceTransformer(MODEL_NAME)
     return _model

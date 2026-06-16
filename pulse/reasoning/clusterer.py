@@ -1,5 +1,4 @@
-import umap
-import hdbscan
+# Heavy imports deferred to avoid startup OOM
 import numpy as np
 from typing import List, Dict
 
@@ -19,6 +18,9 @@ def cluster_embeddings(embeddings: np.ndarray, reviews: List[Dict]) -> List[Dict
         return reviews
         
     # 1. Dimensionality reduction with UMAP
+    # Defer import to save RAM on boot
+    import umap
+    
     # Reduce to 5 dimensions to help HDBSCAN
     n_neighbors = min(15, len(embeddings) - 1)
     reducer = umap.UMAP(
@@ -30,6 +32,9 @@ def cluster_embeddings(embeddings: np.ndarray, reviews: List[Dict]) -> List[Dict
     reduced_embeddings = reducer.fit_transform(embeddings)
     
     # 2. Clustering with HDBSCAN
+    # Defer import
+    import hdbscan
+    
     # Adjust min_cluster_size based on dataset size, e.g., 5 for small datasets
     clusterer = hdbscan.HDBSCAN(
         min_cluster_size=5,
