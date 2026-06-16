@@ -95,19 +95,32 @@ def api_create_email_draft(req: EmailRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-if os.path.exists("static"):
-    if os.path.exists("static/assets"):
-        app.mount("/assets", StaticFiles(directory="static/assets"), name="assets")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+STATIC_ASSETS_DIR = os.path.join(STATIC_DIR, "assets")
+
+@app.get("/debug")
+def debug_info():
+    return {
+        "cwd": os.getcwd(),
+        "files_in_base": os.listdir(BASE_DIR),
+        "static_exists": os.path.exists(STATIC_DIR),
+        "static_assets_exists": os.path.exists(STATIC_ASSETS_DIR)
+    }
+
+if os.path.exists(STATIC_DIR):
+    if os.path.exists(STATIC_ASSETS_DIR):
+        app.mount("/assets", StaticFiles(directory=STATIC_ASSETS_DIR), name="assets")
 
     @app.get("/")
     def serve_root():
-        return FileResponse("static/index.html")
+        return FileResponse(os.path.join(STATIC_DIR, "index.html"))
 
     @app.get("/{full_path:path}")
     def serve_frontend(full_path: str):
         if full_path.startswith("api/"):
             raise HTTPException(status_code=404, detail="API route not found")
-        return FileResponse("static/index.html")
+        return FileResponse(os.path.join(STATIC_DIR, "index.html"))
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
