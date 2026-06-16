@@ -1,6 +1,8 @@
 import argparse
 import sys
-from datetime import datetime
+import time
+import schedule
+from datetime import datetime, timedelta
 from pulse.orchestrator import run_pulse
 from pulse.logger import setup_logger
 
@@ -24,11 +26,27 @@ def main():
         logger.info(f"Manual run triggered for {args.product} on week {args.week}")
         run_pulse(args.product, args.week)
     elif args.command == "schedule":
-        logger.info("Scheduler started. Waiting for next cron trigger...")
-        # Stub for scheduler
+        logger.info("Scheduler started. Pipeline will run every Monday at 08:00 (Local Time)...")
+        
+        def run_weekly_job():
+            # Calculate the ISO week for the previous week
+            prev_week_date = datetime.now() - timedelta(days=7)
+            iso_year, iso_week, _ = prev_week_date.isocalendar()
+            week_str = f"{iso_year}-W{iso_week:02d}"
+            
+            logger.info(f"Cron triggered! Running pipeline for Groww, week: {week_str}")
+            try:
+                run_pulse("Groww", week_str)
+            except Exception as e:
+                logger.error(f"Scheduled run failed: {e}")
+
+        # Schedule the job
+        schedule.every().monday.at("08:00").do(run_weekly_job)
+        
         try:
             while True:
-                pass
+                schedule.run_pending()
+                time.sleep(60) # Check every minute
         except KeyboardInterrupt:
             logger.info("Scheduler stopped.")
     else:

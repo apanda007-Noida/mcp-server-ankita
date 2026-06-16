@@ -10,6 +10,7 @@ from pulse.reasoning.clusterer import cluster_embeddings, group_by_cluster
 from pulse.reasoning.summarizer import summarize_all_clusters
 from pulse.reasoning.validator import validate_all_summaries
 from pulse.output.formatter import generate_docs_report, generate_email_teaser
+from pulse.delivery.mcp_client import send_to_google_docs, send_email_draft
 
 PRODUCT_TO_PACKAGE = {
     "Groww": "com.nextbillion.groww",
@@ -83,11 +84,15 @@ def run_pulse(product: str, week: str):
             
         logger.info("Output generation complete. Saved to data/report.md and data/email_teaser.txt")
         
-        # Phase 5 Stub: MCP Delivery
+        # Phase 5/6: MCP Delivery
         logger.info("Starting delivery via MCP servers")
-        time.sleep(1) # Simulating work
+        docs_success = send_to_google_docs(docs_report, logger)
+        email_success = send_email_draft(f"{product} \u2014 App Review Pulse ({week})", email_teaser, logger)
         
-        logger.info("Automated Weekly App Review Pulse completed successfully")
+        if docs_success and email_success:
+            logger.info("Automated Weekly App Review Pulse completed and delivered successfully")
+        else:
+            logger.warning("Pulse completed but some MCP deliveries failed or were skipped due to missing environment variables.")
         
     except Exception as e:
         logger.error(f"Pulse execution failed: {str(e)}")

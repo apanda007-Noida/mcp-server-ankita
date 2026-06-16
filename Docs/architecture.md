@@ -74,7 +74,7 @@ Formats the LLM's output into the final presentation layers:
 - **Email Template**: Creates a lightweight teaser summarizing the top themes as bullet points, accompanied by a deep link to the newly created section in the Google Doc.
 
 ### 2.4 Human-Visible Delivery (MCP Servers)
-To isolate the agent from Google Workspace credentials, delivery is handled entirely via dedicated MCP servers **built within this project**.
+To isolate the agent from Google Workspace credentials, delivery is handled entirely via dedicated MCP servers deployed on Railway (`https://google-mcp-server-production-27c2.up.railway.app`).
 - **Google Docs MCP**:
   - Handles authentication and OAuth.
   - Appends the weekly report as a new, clearly labeled (and dated) section to the running canonical Google Doc (*Weekly Review Pulse — Groww*).

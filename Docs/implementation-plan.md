@@ -32,25 +32,23 @@ This document outlines the step-by-step implementation plan for the Automated We
 - **4.1 Docs Formatter:** Create a module that takes the themes, quotes, and actions and formats them into a clean Markdown/HTML structure for Google Docs.
 - **4.2 Email Formatter:** Create a lightweight "teaser" template for the Gmail output that includes bullet points of top themes and a placeholder for the deep link.
 
-## Phase 5: Custom MCP Server Development (FastAPI)
-**Goal:** Build a complete MCP-style server in Python that integrates with Google Docs and Gmail using FastAPI.
+## Phase 5: Custom MCP Server Development & Railway Deployment
+**Goal:** Build a complete MCP-style server in Python that integrates with Google Docs and Gmail using FastAPI, and deploy it to Railway.
 
 **Directory Structure:**
 `google-mcp-server/`
-- `server.py`: FastAPI app exposing two POST endpoints (`/append_to_doc`, `/create_email_draft`). Implements an interactive terminal approval (`Approve? (y/n)`) before executing any action.
-- `auth.py`: Google OAuth 2.0 authentication requesting Docs and Gmail scopes. Handles loading/saving `credentials.json` and `token.json`.
+- `server.py`: FastAPI app exposing two POST endpoints (`/append_to_doc`, `/create_email_draft`). Configured to automatically approve requests via `REQUIRE_APPROVAL=false` env var when running in the cloud.
+- `auth.py`: Google OAuth 2.0 authentication requesting Docs and Gmail scopes. Handles loading credentials directly from `GOOGLE_CREDENTIALS_JSON` and `GOOGLE_TOKEN_JSON` env vars.
 - `docs_tool.py`: Contains `append_to_doc(doc_id, content)` using the Google Docs API.
 - `gmail_tool.py`: Contains `create_email_draft(to, subject, body)` using the Gmail API.
-- `requirements.txt`: Dependencies (`fastapi`, `uvicorn`, `google-auth-oauthlib`, `google-api-python-client`).
-- `README.md`: Instructions for setup, creating OAuth credentials, and running the server.
+- `requirements.txt`: Dependencies.
+- `Procfile`: Start command for Railway (`web: uvicorn server:app --host 0.0.0.0 --port $PORT`).
 
-> [!WARNING]  
-> **Interactive Prompts in FastAPI**
-> You requested an interactive `Approve? (y/n)` prompt inside the server before taking action. I will implement this by using a synchronous endpoint or running `input()` in a thread so it doesn't crash the async event loop. Since the server runs in the terminal, the terminal will hang and wait for your `y` or `n` input for every single request. Is this acceptable?
+**Status**: Deployed securely to `https://google-mcp-server-production-27c2.up.railway.app`.
 
 ## Phase 6: Integration and End-to-End Testing
 **Goal:** Connect all modules and ensure the system runs seamlessly from end to end.
-- **6.1 Pipeline Assembly:** Wire the Ingestion -> Reasoning -> Formatting -> MCP Delivery flow together.
+- **6.1 Pipeline Assembly:** Wire the Ingestion -> Reasoning -> Formatting flow to send HTTP POST requests directly to the deployed Railway MCP server (`https://google-mcp-server-production-27c2.up.railway.app`).
 - **6.2 CLI Backfill Testing:** Test the CLI to generate reports for historical ISO weeks and ensure idempotency holds up.
 - **6.3 Staging Run:** Run the entire system in "draft-only" mode for email and verify the Google Doc append behavior. Review the generated deep links to ensure they correctly navigate to the new Doc section.
 

@@ -1,11 +1,14 @@
 # pyrefly: ignore [missing-import]
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 # pyrefly: ignore [missing-import]
 from pydantic import BaseModel
 # pyrefly: ignore [missing-import]
 import uvicorn
 import sys
 import os
+import json
 
 # Import our tools
 from docs_tool import append_to_doc
@@ -22,9 +25,17 @@ class EmailRequest(BaseModel):
     subject: str
     body: str
 
-@app.get("/")
-def read_root():
-    return {"status": "online", "message": "Google Workspace MCP Server is running."}
+@app.get("/api/insights")
+def get_insights():
+    try:
+        paths = ["../data/insights.json", "data/insights.json"]
+        for p in paths:
+            if os.path.exists(p):
+                with open(p, "r", encoding="utf-8") as f:
+                    return json.load(f)
+        return []
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/health")
 def health_check():
@@ -81,6 +92,19 @@ def api_create_email_draft(req: EmailRequest):
         return {"status": "success", "result": result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+if os.path.exists("static"):
+    app.mount("/assets", StaticFiles(directory="static/assets"), name="assets")
+
+    @app.get("/")
+    def serve_root():
+        return FileResponse("static/index.html")
+
+    @app.get("/{full_path:path}")
+    def serve_frontend(full_path: str):
+        if full_path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="API route not found")
+        return FileResponse("static/index.html")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
