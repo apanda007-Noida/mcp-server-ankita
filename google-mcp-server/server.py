@@ -32,6 +32,9 @@ class TriggerRequest(BaseModel):
     week: str
 
 import threading
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from pulse.orchestrator import run_pulse
 
 @app.get("/api/insights")
