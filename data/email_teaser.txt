@@ -1,14 +1,36 @@
-Subject: Groww App Review Pulse — 2024-W20
-
-Hi Team,
-
-The automated App Review Pulse for Groww is ready for 2024-W20.
-
-Here are the top themes customers are talking about this week:
-
-• FEATURE ENHANCEMENTS:
-  Users are suggesting new features and improvements to the existing ones to make the app more user-friendly and efficient. They are providing specific ideas and examples of how the app can be enhanced.
-
-
-Read the full report, verbatim quotes, and action ideas in the canonical Google Doc here:
-[INSERT DOC LINK HERE]
+<p>Hi,</p>
+<p>The main signal from this week's Groww review pulse is that users are experiencing significant pain points with Poor Trading Experience, User Friendly App, and Easy to Use.</p>
+<p>The biggest user pain point is the consistent issues with Poor Trading Experience, including Users are expressing frustration with the app's performance, citing issues such as lag, glitches, and incorrect data, which are resulting in financial losses. They are also unhappy with the customer support and hidden charges., which are causing frustration and delays.</p>
+<p>This week, our recommended focus should be on conduct a thorough review of the app's performance and fix any bugs or glitches that are causing issues for users and improve customer support by providing timely and effective solutions to user problems, and consider adding features such as saving chart templates to enhance the user experience to reduce failures and waiting time.</p>
+<p>Here is the weekly review pulse for Groww:</p>
+<h3>WEEKLY GROWW PULSE</h3>
+<p>[2026-06-09 to 2026-06-16]</p>
+<h4>TOP THEMES</h4>
+<ul>
+<li><strong>Poor Trading Experience (881 reviews):</strong> Users are expressing frustration with the app's performance, citing issues such as lag, glitches, and incorrect data, which are resulting in financial losses. They are also unhappy with the customer support and hidden charges.</li>
+<li><strong>User Friendly App (172 reviews):</strong> Users praise the Groww app for its simplicity, ease of use, and clean interface, making it perfect for beginners and experienced investors alike. They appreciate the app's features, such as easy navigation, clear charts, and timely updates.</li>
+<li><strong>Easy to Use (109 reviews):</strong> Users praise the Groww app for its simplicity, ease of use, and user-friendly interface, making it accessible to beginners and experienced users alike. The app's design and functionality are consistently highlighted as its strongest features.</li>
+</ul>
+<h4>QUOTES</h4>
+<ol>
+<li>"Worst app for trading. the broke gets freeze in the middle of the trade. I faced huge losses due to Groww."</li>
+<li>"I think the app developers are sleeping because A basic function like saving chart template option is not there do you expect each trader to set indicators etc. each time they open a chart ?"</li>
+<li>"Groww is one of the most beginner-friendly Android investment apps I’ve used."</li>
+<li>"The interface is clean, simple, and very user-friendly, making it perfect for both beginners and experienced users."</li>
+<li>"Absolutely phenomenal app. Will get everything you could possibly need in terms of instruments or information and in a really great user interface that you just cannot not win with."</li>
+<li>"Easy Interface and Fast access to all the services"</li>
+<li>"very nice application Fast and easy to use"</li>
+<li>"User friendly and easy to track the details compared to other apps."</li>
+</ol>
+<h4>ACTION IDEAS</h4>
+<ol>
+<li>Conduct a thorough review of the app's performance and fix any bugs or glitches that are causing issues for users</li>
+<li>Improve customer support by providing timely and effective solutions to user problems, and consider adding features such as saving chart templates to enhance the user experience</li>
+<li>Continue to simplify and improve the app's user interface to enhance the overall user experience.</li>
+<li>Develop more educational resources and tutorials to help new users navigate the app and understand investing concepts.</li>
+<li>Continue to prioritize user experience and simplicity in future updates and feature additions.</li>
+<li>Expand educational resources and tutorials within the app to further support beginners.</li>
+<li>Conduct regular user testing to identify and address any emerging complexity or usability issues.</li>
+<li>Develop a feedback mechanism to allow users to suggest new features or improvements without compromising the app's ease of use.</li>
+</ol>
+<br/><p><a href='https://docs.google.com/document/d/1oH1NmSGBN3fmq--beDsiN6uHtWhzbE40AyDMHy7pZJo/edit' style='display:inline-block;padding:10px 16px;background-color:#10b981;color:white;text-decoration:none;border-radius:4px;font-weight:bold;'>Open Full Report in Google Docs</a></p>
