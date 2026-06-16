@@ -59,6 +59,9 @@ export default function DashboardView() {
     reviews: i.review_count || 0
   }));
 
+  const allQuotes = validInsights.flatMap(i => i.quotes || []).slice(0, 5);
+  const allActionIdeas = validInsights.flatMap(i => i.action_ideas || []).slice(0, 5);
+
   return (
     <div className="dashboard-grid">
       {/* 1. Trigger & Artifacts Section */}
@@ -147,22 +150,30 @@ export default function DashboardView() {
         </div>
       </div>
 
-      {/* 4. Action Ideas */}
-      <div className="card" style={{ marginTop: '24px' }}>
-        <h3 className="section-title">🚀 STRATEGIC ACTION IDEAS</h3>
-        {validInsights.filter(i => i.action_ideas && i.action_ideas.length > 0).slice(0,3).map((insight, idx) => {
-          const colors = ['green', 'orange', 'purple'];
-          const color = colors[idx % colors.length];
-          return (
-            <div key={idx} className="action-item">
-              <div className={`action-number ${color}`}>{idx + 1}</div>
-              <div className="action-text">
-                <h5 style={{color: `var(--accent-${color})`}}>{insight.theme}</h5>
-                <p>{insight.action_ideas[0]}</p>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginTop: '24px' }}>
+        {/* 4. Verbatim Quotes */}
+        <div className="card">
+          <h3 className="section-title">🗣️ VERBATIM QUOTES</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {allQuotes.map((quote, idx) => (
+              <div key={idx} style={{ padding: '16px', background: '#1e293b', borderRadius: '8px', borderLeft: '4px solid #f472b6' }}>
+                <p style={{ fontStyle: 'italic', color: '#e2e8f0', margin: 0 }}>"{quote}"</p>
               </div>
-            </div>
-          );
-        })}
+            ))}
+          </div>
+        </div>
+
+        {/* 5. Action Ideas */}
+        <div className="card">
+          <h3 className="section-title">🚀 STRATEGIC ACTION IDEAS</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {allActionIdeas.map((idea, idx) => (
+              <div key={idx} style={{ padding: '16px', background: '#1e293b', borderRadius: '8px', borderLeft: '4px solid #10b981' }}>
+                <p style={{ color: '#e2e8f0', margin: 0 }}>{idx + 1}. {idea}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
