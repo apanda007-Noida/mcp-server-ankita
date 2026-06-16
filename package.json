@@ -1,5 +1,8 @@
 {
   "name": "root-project",
   "version": "1.0.0",
-  "description": "Dummy package.json to force Railway Nixpacks to load the Node.js provider"
+  "description": "Root package.json to trigger Nixpacks Node provider on Railway",
+  "scripts": {
+    "build": "npm --prefix google-mcp-server/dashboard install && npm --prefix google-mcp-server/dashboard run build"
+  }
 }

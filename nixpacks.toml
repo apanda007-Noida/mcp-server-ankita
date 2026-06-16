@@ -2,6 +2,3 @@ providers = ["python", "node"]
 
 [phases.install]
 cmds = ["...", "pip install -r google-mcp-server/requirements.txt"]
-
-[phases.build]
-cmds = ["...", "cd google-mcp-server/dashboard && npm install && npm run build"]
