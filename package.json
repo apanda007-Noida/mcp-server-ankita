@@ -1,8 +1,0 @@
-{
-  "name": "mcp-server-ankita",
-  "version": "1.0.0",
-  "description": "Root package.json to trigger Nixpacks Node provider on Railway",
-  "scripts": {
-    "build": "cd google-mcp-server/dashboard && npm install && npm run build"
-  }
-}
