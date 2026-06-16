@@ -13,22 +13,18 @@ from langdetect.lang_detect_exception import LangDetectException
 # Ensure consistent language detection
 DetectorFactory.seed = 0
 
-def fetch_reviews(app_package: str, weeks: int = 12, logger=None):
+def fetch_reviews(app_package: str, start_date_str: str, end_date_str: str, logger=None):
     """
-    Fetch reviews for a given Google Play app package from the last N weeks.
-    
-    Args:
-        app_package (str): The Google Play app package identifier.
-        weeks (int): Number of weeks to look back.
-        logger (Logger): Optional logger instance.
-        
-    Returns:
-        list: A list of normalized review dictionaries.
+    Fetch reviews for a given Google Play app package within a date range.
+    Caps at 2000 users.
     """
-    cutoff_date = datetime.now() - relativedelta(weeks=weeks)
+    # Parse YYYY-MM-DD format from HTML5 input
+    start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
+    # End date should include the whole day
+    end_date = datetime.strptime(end_date_str, "%Y-%m-%d").replace(hour=23, minute=59, second=59)
     
     if logger:
-        logger.info(f"Fetching Play Store reviews for {app_package} since {cutoff_date.date()}")
+        logger.info(f"Fetching Play Store reviews for {app_package} from {start_date.date()} to {end_date.date()}")
     
     result, continuation_token = reviews(
         app_package,
@@ -41,19 +37,23 @@ def fetch_reviews(app_package: str, weeks: int = 12, logger=None):
     all_reviews = []
     all_reviews.extend(result)
     
-    # Paginate if the last review in the batch is still newer than the cutoff date
-    while continuation_token and all_reviews[-1]['at'] > cutoff_date:
+    # Paginate if the last review in the batch is still newer than the start_date
+    while continuation_token and all_reviews[-1]['at'] >= start_date:
         result, continuation_token = reviews(
             app_package,
             continuation_token=continuation_token
         )
         all_reviews.extend(result)
         
-    # Filter strictly by cutoff_date
-    filtered_reviews = [r for r in all_reviews if r['at'] > cutoff_date]
+    # Filter strictly by the date range
+    filtered_reviews = [r for r in all_reviews if start_date <= r['at'] <= end_date]
+    
+    # Cap at 2000 users
+    if len(filtered_reviews) > 2000:
+        filtered_reviews = filtered_reviews[:2000]
     
     if logger:
-        logger.info(f"Fetched {len(filtered_reviews)} reviews within the last {weeks} weeks.")
+        logger.info(f"Fetched {len(filtered_reviews)} reviews within the date range.")
         
     return _normalize_reviews(filtered_reviews), filtered_reviews
 

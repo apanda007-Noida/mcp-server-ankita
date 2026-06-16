@@ -8,8 +8,8 @@ export default function DashboardView() {
   const [loading, setLoading] = useState(true);
 
   // Trigger state
-  const [triggerProduct, setTriggerProduct] = useState('Groww');
-  const [triggerWeek, setTriggerWeek] = useState('2024-W20');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [triggerStatus, setTriggerStatus] = useState('');
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function DashboardView() {
       const res = await fetch('/api/trigger', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ product: triggerProduct, week: triggerWeek })
+        body: JSON.stringify({ start_date: startDate, end_date: endDate })
       });
       const resData = await res.json();
       setTriggerStatus(resData.message || 'Pipeline started!');
@@ -66,15 +66,23 @@ export default function DashboardView() {
     <div className="dashboard-grid">
       {/* 1. Trigger & Artifacts Section */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
-        <div className="card">
-          <h3 className="section-title">🚀 RUN PIPELINE</h3>
-          <form onSubmit={handleTrigger} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <input type="text" value={triggerProduct} onChange={e => setTriggerProduct(e.target.value)} placeholder="Product (e.g. Groww)" style={{ padding: '8px', borderRadius: '4px', border: '1px solid #334155', background: '#1e293b', color: 'white', flex: 1 }}/>
-              <input type="text" value={triggerWeek} onChange={e => setTriggerWeek(e.target.value)} placeholder="Week (e.g. 2024-W20)" style={{ padding: '8px', borderRadius: '4px', border: '1px solid #334155', background: '#1e293b', color: 'white', flex: 1 }}/>
+        <div className="card" style={{ gridColumn: '1 / -1' }}>
+          <h3 className="section-title text-sm text-slate-400 mb-4 tracking-wider uppercase font-semibold">MANUAL PIPELINE TRIGGER</h3>
+          <form onSubmit={handleTrigger} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label style={{ fontSize: '0.85rem', color: '#94a3b8' }}>Start Date</label>
+                <input type="date" required value={startDate} onChange={e => setStartDate(e.target.value)} style={{ padding: '10px 12px', borderRadius: '6px', border: '1px solid #334155', background: '#0f172a', color: 'white', outline: 'none' }}/>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label style={{ fontSize: '0.85rem', color: '#94a3b8' }}>End Date</label>
+                <input type="date" required value={endDate} onChange={e => setEndDate(e.target.value)} style={{ padding: '10px 12px', borderRadius: '6px', border: '1px solid #334155', background: '#0f172a', color: 'white', outline: 'none' }}/>
+              </div>
             </div>
-            <button type="submit" style={{ padding: '10px', background: '#6366f1', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Trigger Pulse</button>
-            {triggerStatus && <div style={{ color: '#4ade80', fontSize: '0.9rem' }}>{triggerStatus}</div>}
+            <button type="submit" style={{ width: '100%', padding: '12px', background: 'linear-gradient(to right, #60a5fa, #a78bfa)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '1rem', marginTop: '8px' }}>
+              ▶ Run Pipeline
+            </button>
+            {triggerStatus && <div style={{ color: '#4ade80', fontSize: '0.9rem', textAlign: 'center' }}>{triggerStatus}</div>}
           </form>
         </div>
 
@@ -94,16 +102,16 @@ export default function DashboardView() {
       {/* 2. Key Insights (5 fields) */}
       <div className="kpi-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px' }}>
         <div className="card kpi-card">
-          <h3 style={{ color: '#60a5fa' }}>{triggerProduct}</h3>
+          <h3 style={{ color: '#60a5fa' }}>Groww</h3>
           <p>Product</p>
         </div>
         <div className="card kpi-card">
-          <h3 style={{ color: '#a78bfa' }}>{triggerWeek}</h3>
+          <h3 style={{ color: '#a78bfa' }}>{stats?.dateRange || "Current"}</h3>
           <p>Timeline</p>
         </div>
         <div className="card kpi-card">
           <h3 style={{ color: '#34d399' }}>{totalReviews}</h3>
-          <p>Reviews Analysed</p>
+          <p>Reviews Analyzed</p>
         </div>
         <div className="card kpi-card">
           <h3 style={{ color: '#f472b6' }}>{avgRating}★</h3>

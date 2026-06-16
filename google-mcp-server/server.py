@@ -28,8 +28,8 @@ class EmailRequest(BaseModel):
     body: str
 
 class TriggerRequest(BaseModel):
-    product: str
-    week: str
+    start_date: str
+    end_date: str
 
 import threading
 import sys
@@ -51,9 +51,9 @@ def get_insights():
 
 @app.post("/api/trigger")
 def trigger_pipeline(req: TriggerRequest):
-    t = threading.Thread(target=run_pulse, args=(req.product, req.week))
+    t = threading.Thread(target=run_pulse, args=(req.start_date, req.end_date))
     t.start()
-    return {"status": "started", "message": f"Pipeline triggered for {req.product} {req.week}"}
+    return {"status": "started", "message": f"Pipeline triggered for {req.start_date} to {req.end_date}"}
 
 @app.get("/api/config")
 def get_config():

@@ -17,12 +17,15 @@ PRODUCT_TO_PACKAGE = {
     # Add other mappings if needed
 }
 
-def run_pulse(product: str, week: str):
+def run_pulse(start_date: str, end_date: str):
     """
     Main job runner that will eventually tie all phases together.
     """
+    product = "Groww" # Hardcoded per new UI
+    week_str = f"{start_date} to {end_date}"
+    
     run_id = str(uuid.uuid4())
-    logger = get_run_logger(run_id, product, week)
+    logger = get_run_logger(run_id, product, week_str)
     
     logger.info("Starting Automated Weekly App Review Pulse")
     
@@ -33,8 +36,7 @@ def run_pulse(product: str, week: str):
             raise ValueError(f"Unknown product mapping for: {product}")
             
         logger.info("Starting data ingestion")
-        # Defaulting to 10 weeks back as per requirements window
-        scraped_data, raw_data = fetch_reviews(app_package, weeks=10, logger=logger)
+        scraped_data, raw_data = fetch_reviews(app_package, start_date, end_date, logger=logger)
         
         # Dump to JSON files
         os.makedirs("data", exist_ok=True)
@@ -72,10 +74,10 @@ def run_pulse(product: str, week: str):
         
         # Phase 4: Output Generation
         logger.info("Starting output generation")
-        docs_report = generate_docs_report(validated_summaries, product, week)
+        docs_report = generate_docs_report(validated_summaries, product, week_str)
         doc_id = os.environ.get("GOOGLE_DOC_ID", "1oH1NmSGBN3fmq--beDsiN6uHtWhzbE40AyDMHy7pZJo")
         doc_link = f"https://docs.google.com/document/d/{doc_id}/edit" if doc_id else "https://docs.google.com/"
-        email_teaser = generate_email_teaser(validated_summaries, product, week, doc_link)
+        email_teaser = generate_email_teaser(validated_summaries, product, week_str, doc_link)
         
         # Save formatted outputs for testing/audit
         with open("data/report.md", "w", encoding="utf-8") as f:
@@ -89,7 +91,7 @@ def run_pulse(product: str, week: str):
         # Phase 5/6: MCP Delivery
         logger.info("Starting delivery via MCP servers")
         docs_success = send_to_google_docs(docs_report, logger)
-        email_success = send_email_draft(f"{product} \u2014 App Review Pulse ({week})", email_teaser, logger)
+        email_success = send_email_draft(f"{product} \u2014 App Review Pulse ({week_str})", email_teaser, logger)
         
         if docs_success and email_success:
             logger.info("Automated Weekly App Review Pulse completed and delivered successfully")
