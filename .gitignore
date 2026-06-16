@@ -15,3 +15,7 @@ google-mcp-server/token.json
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Node
+node_modules/
+package-lock.json
