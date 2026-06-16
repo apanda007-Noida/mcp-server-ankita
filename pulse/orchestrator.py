@@ -73,7 +73,7 @@ def run_pulse(product: str, week: str):
         # Phase 4: Output Generation
         logger.info("Starting output generation")
         docs_report = generate_docs_report(validated_summaries, product, week)
-        doc_id = os.environ.get("GOOGLE_DOC_ID", "")
+        doc_id = os.environ.get("GOOGLE_DOC_ID", "1oH1NmSGBN3fmq--beDsiN6uHtWhzbE40AyDMHy7pZJo")
         doc_link = f"https://docs.google.com/document/d/{doc_id}/edit" if doc_id else "https://docs.google.com/"
         email_teaser = generate_email_teaser(validated_summaries, product, week, doc_link)
         

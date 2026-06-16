@@ -58,7 +58,7 @@ def trigger_pipeline(req: TriggerRequest):
 @app.get("/api/config")
 def get_config():
     return {
-        "google_doc_id": os.environ.get("GOOGLE_DOC_ID", "") 
+        "google_doc_id": os.environ.get("GOOGLE_DOC_ID", "1oH1NmSGBN3fmq--beDsiN6uHtWhzbE40AyDMHy7pZJo") 
     }
 
 @app.get("/api/stats")
