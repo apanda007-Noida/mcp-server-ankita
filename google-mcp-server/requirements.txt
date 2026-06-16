@@ -3,3 +3,15 @@ uvicorn==0.30.1
 google-api-python-client==2.131.0
 google-auth-httplib2==0.2.0
 google-auth-oauthlib==1.2.0
+groq
+tiktoken
+python-dotenv
+sentence-transformers
+numpy
+umap-learn
+hdbscan
+google-play-scraper
+python-dateutil
+emoji
+langdetect
+schedule
